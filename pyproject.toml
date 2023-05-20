@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "test-tasks"
+version = "0.1.0"
+description = ""
+authors = ["Tetenkov Alexander <forthe@ya.ru>"]
+readme = "README.md"
+packages = [{include = "test_tasks"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.95.2"
+uvicorn = "^0.22.0"
+beautifulsoup4 = "^4.12.2"
+pytest = "^7.3.1"
+httpx = "^0.24.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,31 @@
+<html lang="en" op="news">
+<head>
+    <meta name="referrer" content="origin">
+    <td class="default">
+        <div style="margin-top:2px; margin-bottom:-10px;"><span class="comhead">
+      <a href="user?id=nneonneo" class="hnuser">nneonneo</a> <span class="age" title="2017-02-23T17:32:02"><a
+                href="item?id=13715761">on Feb 23, 2017</a></span> <span id="unv_13715761"></span>          <span
+                class="navs">
+      | <a href="#13713994" class="clicky" aria-hidden="true">next</a> <a class="togg clicky" id="13715761" n="36"
+                                                                          href="javascript:void(0)">[–]</a><span
+                class="onstory"></span>          </span>
+      </span>
+        </div>
+        <br>
+        <div class="comment">
+      <span class="commtext c00">
+         The visual description of the colliding files, at <a href="http://shattered.io/static/pdf_format.png"
+                                                              rel="nofollow">http://shattered.io/static/pdf_format.png</a>, is not very helpful in understanding how they produced the PDFs, so I took apart the PDFs and worked it out.
+         <p>Basically, each PDF contains a single large (421,385-byte) JPG image, followed by a few PDF commands to display the JPG. The collision lives entirely in the JPG data - the PDF format is merely incidental here. Extracting out the two images shows two JPG files with different contents (but different SHA-1 hashes since the necessary prefix is missing). Each PDF consists of a common prefix (which contains the PDF header, JPG stream descriptor and some JPG headers), and a common suffix (containing image data and PDF display commands).</p>
+         <p>The header of each JPG contains a comment field, aligned such that the 16-bit length value of the field lies in the collision zone. Thus, when the collision is generated, one of the PDFs will have a longer comment field than the other. After that, they concatenate two complete JPG image streams with different image content - File 1 sees the first image stream and File 2 sees the second image stream. This is achieved by using misalignment of the comment fields to cause the first image stream to appear as a comment in File 2 (more specifically, as a sequence of comments, in order to avoid overflowing the 16-bit comment length field). Since JPGs terminate at the end-of-file (FFD9) marker, the second image stream isn't even examined in File 1 (whereas that marker is just inside a comment in File 2).</p>
+         <p>tl;dr: the two "PDFs" are just wrappers around JPGs, which each contain two independent image streams, switched by way of a variable-length comment field.
+         </p>
+         <div class="reply">
+            <p><font size="1">
+               </font>
+            </p>
+         </div>
+      </span>
+        </div>
+    </td>
+</html>
