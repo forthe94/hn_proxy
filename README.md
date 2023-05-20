@@ -1,5 +1,9 @@
 ## Hacker News Proxy
-python 3.10
 
 # RUN
+```python
+python3.10 -m venv venv
+source venv/bin/activate
+poetry install
 python server.py
+```
