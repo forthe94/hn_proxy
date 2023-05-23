@@ -11,11 +11,7 @@ def replace_6_len_words(string: str):
     return re.sub(r"\b(\w{6})\b", r"\1™", string)
 
 
-def replace_links(string: str):
-    return re.sub(rf"{config.HACKERNEWS_URL}", r"localhost:8000", string)
-
-
-def process_hn_page(html: str) -> str:
+def process_hn_page(html: bytes) -> bytes:
     soup = BeautifulSoup(html)
     items = [soup.find("html")]
 
@@ -25,10 +21,10 @@ def process_hn_page(html: str) -> str:
     texts = soup.findAll(text=True)
 
     for text in texts:
-        if text.parent.name in ["a"]:
-            continue
-        replace_text = replace_links(text)
-        replace_text = replace_6_len_words(replace_text)
+        replace_text = replace_6_len_words(text)
         text.replace_with(replace_text)
 
-    return soup.prettify(formatter=formatter)
+    for a in soup.find_all(href=True):
+        a['href'] = a['href'].replace(config.HACKERNEWS_URL, 'localhost:8000')
+
+    return soup.encode('utf-8', formatter=formatter)

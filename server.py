@@ -21,10 +21,9 @@ async def hacker_news_proxy(
             f"{config.HACKERNEWS_URL}/{full_path}",
             params=request.query_params,
         )
-        text = proxy.text
-        text = process_hn_page(text)
-        response.body = text.encode(encoding="UTF-8", errors="strict")
+        response.body = process_hn_page(proxy.content)
         response.status_code = proxy.status_code
+        response.headers['content-type'] = proxy.headers['content-type']
         return response
 
 
